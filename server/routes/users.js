@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+// middleware for redirecting to login page if not logged in
 router.use('/', function(req,res,next){
   if(!req.user){
     res.redirect('/');
