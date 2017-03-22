@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Yancy Knight <yancy.knight@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/yancyknight/express-passport-starter",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "server/public/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "font-awesome": "fontawesome#^4.7.0"
+  }
+}

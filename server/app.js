@@ -4,11 +4,29 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var session = require('express-session');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var auth = require('./routes/auth');
 
 var app = express();
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+
+googleID = process.env.GOOGLE_ID;
+googleSecret = process.env.GOOGLE_SECRET;
+passport.use(new GoogleStrategy({
+  clientID: googleID,
+  clientSecret: googleSecret,
+  callbackURL: 'http://localhost:3000/auth/google/callback'},
+  function(req, accessToken, refreshToken, profile, done) {
+    var user = {};
+
+    user.email = profile.emails[0].value;
+    done(null, profile);
+  }
+));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,8 +41,21 @@ app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+mySecret = process.env.EXPRESS_SECRET || 'not a secure secret';
+app.use(session({secret: mySecret}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function(user, done){
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 app.use('/', index);
 app.use('/users', users);
+app.use('/auth', auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
